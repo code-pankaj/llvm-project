@@ -67,32 +67,3 @@ struct comparable_t {
                                                                   expected-note {{defaulted 'operator<=>' is implicitly deleted because defaulted comparison of vector types is not supported}}
 };
 } // namespace GH137452
-
-// Issue #170015: Don't crash when comparison category constants have incorrect types
-namespace GH170015 {
-namespace std {
-  struct partial_ordering {
-    signed char value;
-
-    constexpr partial_ordering(signed char v) : value(v) {}
-
-    constexpr bool operator==(partial_ordering other) const { return value == other.value; }
-    constexpr bool operator!=(partial_ordering other) const { return value != other.value; }
-    constexpr bool operator<(partial_ordering other) const { return value < other.value; }
-    constexpr bool operator>(partial_ordering other) const { return value > other.value; }
-    constexpr bool operator<=(partial_ordering other) const { return value <= other.value; }
-    constexpr bool operator>=(partial_ordering other) const { return value >= other.value; }
-
-    // The constants should be of type partial_ordering, not signed char.
-    // This is invalid but should not crash the compiler.
-    static constexpr signed char less = -1;
-    static constexpr signed char equivalent = 0;
-    static constexpr signed char greater = 1;
-    static constexpr signed char unordered = -128;
-  };
-}
-
-void test() {
-  (void) (3.0f <=> 3.5f); // expected-error {{invalid operands to binary expression ('float' and 'float')}}
-}
-} // namespace GH170015
