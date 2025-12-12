@@ -85,7 +85,7 @@ namespace std {
 
     // The constants should be of type partial_ordering, not signed char.
     // This is invalid but should not crash the compiler.
-    static constexpr signed char less = -1;       // expected-note {{declared here}}
+    static constexpr signed char less = -1;
     static constexpr signed char equivalent = 0;
     static constexpr signed char greater = 1;
     static constexpr signed char unordered = -128;
